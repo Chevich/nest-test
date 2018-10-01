@@ -1,7 +1,7 @@
 import { Get, Controller, Req, HttpCode, HttpException, HttpStatus, Param, Post, Body, Query, Res } from '@nestjs/common';
 import { of } from 'rxjs/internal/observable/of';
 import { Observable } from 'rxjs/internal/Observable';
-import { CatsDto } from './cats.dto';
+import { CatsDto } from './interface/cats.dto';
 import { CatsService } from './cats.service';
 
 @Controller('cats')
