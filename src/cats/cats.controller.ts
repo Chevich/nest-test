@@ -1,4 +1,4 @@
-import { Get, Controller, HttpException, HttpStatus, Param, Post, Body, Query, Res, UsePipes, UseGuards } from '@nestjs/common';
+import { Get, Controller, HttpException, HttpStatus, Param, Post, Body, Query, Res, UsePipes, UseGuards, UseInterceptors } from '@nestjs/common';
 import { of } from 'rxjs/internal/observable/of';
 import { Observable } from 'rxjs/internal/Observable';
 import { CatsDto } from './interface/cats.dto';
@@ -6,6 +6,7 @@ import { CatsService } from './cats.service';
 import { ValidationPipe } from '../validation.pipe';
 import { ParseIntPipe } from '../parse-int.pipe';
 import { AuthGuard } from '../auth.guard';
+import { LoggingInterceptor } from '../logging.interceptor';
 
 @Controller('cats')
 export class CatsController {
@@ -33,6 +34,7 @@ export class CatsController {
 
   @Post()
   @UseGuards(AuthGuard)
+  @UseInterceptors(LoggingInterceptor)
   @UsePipes(ValidationPipe)
   createCat(@Body() catsDto: CatsDto): Observable<string> {
     this.catService.createCat(catsDto);
