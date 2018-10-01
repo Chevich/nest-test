@@ -1,12 +1,14 @@
-import { Get, Controller, Req, HttpCode, HttpException, HttpStatus, Param, Post, Body, Query, Res, UsePipes } from '@nestjs/common';
+import { Get, Controller, Req, HttpCode, HttpException, HttpStatus, Param, Post, Body, Query, Res, UsePipes, UseGuards } from '@nestjs/common';
 import { of } from 'rxjs/internal/observable/of';
 import { Observable } from 'rxjs/internal/Observable';
 import { CatsDto } from './interface/cats.dto';
 import { CatsService } from './cats.service';
 import { ValidationPipe } from '../validation.pipe';
 import { ParseIntPipe } from '../parse-int.pipe';
+import { AuthGuard } from '../auth.guard';
 
 @Controller('cats')
+@UseGuards(AuthGuard)
 export class CatsController {
   constructor(private readonly catService: CatsService) {
   }
