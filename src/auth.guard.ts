@@ -10,14 +10,14 @@ export class AuthGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
-    return this.validateRequest(request);
+    return this.validateRequest(context, request);
   }
 
-  validateRequest(request): boolean {
+  validateRequest(context, request): boolean {
     try {
       this.jwtService.verify(request.headers['x-secret-token']);
-    } catch (_) {
-      return false;
+    } catch ({message}) {
+      throw new HttpException(message, HttpStatus.I_AM_A_TEAPOT);
     }
     return true;
   }
