@@ -1,8 +1,10 @@
-import { Get, Controller, Req, HttpCode, HttpException, HttpStatus, Param, Post, Body, Query, Res } from '@nestjs/common';
+import { Get, Controller, Req, HttpCode, HttpException, HttpStatus, Param, Post, Body, Query, Res, UsePipes } from '@nestjs/common';
 import { of } from 'rxjs/internal/observable/of';
 import { Observable } from 'rxjs/internal/Observable';
 import { CatsDto } from './interface/cats.dto';
 import { CatsService } from './cats.service';
+import { ValidationPipe } from '../validation.pipe';
+import { ParseIntPipe } from '../parse-int.pipe';
 
 @Controller('cats')
 export class CatsController {
@@ -15,8 +17,8 @@ export class CatsController {
   }
 
   @Get('catsNo/:no')
-  catsNo(@Param('no') no): Observable<string> {
-    const counter = no || '6';
+  catsNo(@Param('no', new ParseIntPipe()) no): Observable<string> {
+    const counter = no || 6;
     return of(`Returning ${counter} cats`);
   }
 
@@ -32,6 +34,7 @@ export class CatsController {
   }
 
   @Post()
+  @UsePipes(ValidationPipe)
   createCat(@Body() catsDto: CatsDto): Observable<string> {
     this.catService.createCat(catsDto);
     return of(`Cat named ${catsDto.name} has been created`);
