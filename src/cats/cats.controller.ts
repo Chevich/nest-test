@@ -21,8 +21,14 @@ export class CatsController {
   }
 
   @Get('catUnknown')
-  async catUnknown(): Promise<HttpException> {
-    return new HttpException('Nothing Here !', HttpStatus.NO_CONTENT);
+  async catUnknown(a: boolean = false): Promise<string> {
+    console.log('1 ', a);
+
+    if (!a) {
+      console.log('1 ');
+      throw new HttpException('Nothing is here !', HttpStatus.OK);
+    }
+    return Promise.resolve('asdfsdf');
   }
 
   @Post()
