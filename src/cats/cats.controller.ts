@@ -1,4 +1,4 @@
-import { Get, Controller, Req, HttpCode, HttpException, HttpStatus, Param, Post, Body, Query, Res, UsePipes, UseGuards } from '@nestjs/common';
+import { Get, Controller, HttpException, HttpStatus, Param, Post, Body, Query, Res, UsePipes, UseGuards } from '@nestjs/common';
 import { of } from 'rxjs/internal/observable/of';
 import { Observable } from 'rxjs/internal/Observable';
 import { CatsDto } from './interface/cats.dto';
@@ -8,7 +8,6 @@ import { ParseIntPipe } from '../parse-int.pipe';
 import { AuthGuard } from '../auth.guard';
 
 @Controller('cats')
-@UseGuards(AuthGuard)
 export class CatsController {
   constructor(private readonly catService: CatsService) {
   }
@@ -26,16 +25,14 @@ export class CatsController {
 
   @Get('catUnknown')
   async catUnknown(a: boolean = false): Promise<string> {
-    console.log('1 ', a);
-
     if (!a) {
-      console.log('1 ');
       throw new HttpException('Nothing is here !', HttpStatus.OK);
     }
     return Promise.resolve('asdfsdf');
   }
 
   @Post()
+  @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
   createCat(@Body() catsDto: CatsDto): Observable<string> {
     this.catService.createCat(catsDto);

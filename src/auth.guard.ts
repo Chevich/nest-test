@@ -1,14 +1,24 @@
-import {Injectable, CanActivate, ExecutionContext} from '@nestjs/common';
-import {Observable} from 'rxjs';
+import { Injectable, CanActivate, ExecutionContext, HttpException, HttpStatus } from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-    canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
-        const request = context.switchToHttp().getRequest();
-        return AuthGuard.validateRequest(request);
-    }
+  constructor(private readonly jwtService: JwtService) {
 
-    static validateRequest(request): boolean {
-       return request.headers['x-secret-token'] === '123123123';
+  }
+
+  canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+    const request = context.switchToHttp().getRequest();
+    return this.validateRequest(request);
+  }
+
+  validateRequest(request): boolean {
+    try {
+      this.jwtService.verify(request.headers['x-secret-token']);
+    } catch (_) {
+      return false;
     }
+    return true;
+  }
 }
